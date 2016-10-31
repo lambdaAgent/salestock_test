@@ -1,9 +1,17 @@
+//library
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
+import { Router, Route, browserHistory } from 'react-router'
+
+//pages
+import Home from "./component_pages/Home/Home";
+
+
 
 ReactDOM.render(
-  <App />,
-  document.getElementById('root')
+	   	<Router history={browserHistory} >
+	   		<Route path="/" component={Home} />
+			<Route path="*" component={NoMatch}/>
+	  	</Router>
+  , document.getElementById('root')
 );
