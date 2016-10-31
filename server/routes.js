@@ -5,11 +5,6 @@ var pokedex = require("./pokedex");
 var Types = getAllTypes(pokedex);
 
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index');
-});
-
 /* this pokemon return certain amount(default=5) of pokemon, after the lastId
  * GET /pokemon?lastId=12 --> [{id:13},{id:14},{id:15},{id:16},{id:17}]
  */
@@ -22,9 +17,6 @@ router.get("/pokemon", (req, res, next) => {
 		})
 });
 
-router.get("/article/:url", (req, res, next) => {
-
-});
 
 module.exports = router;
 
