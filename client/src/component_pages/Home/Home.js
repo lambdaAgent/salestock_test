@@ -1,4 +1,5 @@
 import React from 'react';
+import homeAction from "./HomeAction"
 
 class Home extends React.Component {
     constructor(props) {
@@ -10,4 +11,8 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+
+const mapStateToProps = ( ({home}) => home );
+const mapDispatchToProps = homeAction;
+
+module.exports = connect(mapStateToProps, mapDispatchToProps)(Home);
