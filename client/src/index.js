@@ -8,6 +8,7 @@ import reducers from "./reducers/index";
 
 //pages
 import Home from "./component_pages/Home/Home";
+import NoMatch from "./component_pages/NoMatch/NoMatch";
 
 var store = createStore(reducers);
 

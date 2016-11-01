@@ -10,6 +10,7 @@ var Types = getAllTypes(pokedex);
  */
 router.get("/pokemon", (req, res, next) => {
 	const defaultAmount = 5;
+	console.log(req.query)
 	const lastId = req.query.lastId || 0;
 	getPokemon(lastId, defaultAmount, pokedex)
 		.then(pokemon__array => {
@@ -29,8 +30,10 @@ module.exports = router;
 // ===========
 
 function getPokemon(lastId, amount, pokedex){
-	var Pokemon__array = pokedex.slice(lastId, amount+lastId);
-	return Promise.resolve(Pokemon__array)
+	return  new Promise((resolve, reject) => {
+		var Pokemon__array = pokedex.slice(Number(lastId), Number(amount)+Number(lastId) );
+		resolve(Pokemon__array)
+	})
 }
 
 function getAllTypes(pokedex){
