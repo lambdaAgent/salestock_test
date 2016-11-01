@@ -1,11 +1,13 @@
 import {createStore} from "redux";
 
 
-const home = (state={}, action) => {
+const home = (state={pokemons: []}, action) => {
 	switch(action.type){
 		case "GET_FROM_SERVER":
-			var Pokemons = (state.Pokemons) ? state.Pokemons.concat(action.payload) : action.payload;
-			return Object.assign({}, state, {Pokemons: Pokemons})
+			var pokemons = state.pokemons.concat(action.payload);
+						console.log("state reducers", state)
+
+			return Object.assign({}, state, {pokemons: pokemons})
 		break;
 		default:
 			return state;

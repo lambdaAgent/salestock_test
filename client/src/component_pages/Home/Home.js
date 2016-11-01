@@ -9,19 +9,22 @@ import { Link } from "react-router";
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        this.displayName = 'Home';
     }
     componentWillMount() {
-          this.props.getPokemons(0)
+        //if no pokemons, then grab it
+        if(this.props.pokemons.length <= 0){
+           this.props.getPokemons(0);
+        }
     }
     render() {
-    	const Pokemons = this.props.Pokemons;
-    	if(!Array.isArray(Pokemons)){
-    		//if no Pokemons yet, show loading
+    	const pokemons = this.props.pokemons;
+    	if(!Array.isArray(pokemons)){
+    		//if no pokemons yet, show loading
     		return <div> Loading... </div>
     	}
 
-    	const loopPokemon = Pokemons.map(p => <List key={p.id} pokemon={p}/> )
+    	const loopPokemon = pokemons.map(p => <List key={p.num} pokemon={p}/> )
+        console.log(this.props.pokemons);
         return (
         	<div>
         		{loopPokemon}
@@ -31,7 +34,7 @@ class Home extends React.Component {
 }
 
 
-const mapStateToProps = ( ({home}) => home );
+const mapStateToProps =  ({home}) => home;
 const mapDispatchToProps = homeAction;
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Home);
@@ -45,13 +48,14 @@ const List = (props) => {
     const poke = props.pokemon
     return(
         <article className="media">
-            <Link to={"/article/"+poke.id} style={{color: "black"}}>
+            <Link to={"/pokemon/"+poke.num} style={{color: "black"}}>
               <div className="media-left">
                 <img className="media-object" src={poke.img} alt={poke.img} />
               </div>
               <div className="media-body">
                 <h4 className="media-heading">{poke.name}</h4>
-                Hello
+                <p> height: {poke.height} </p>
+                <p> weight: {poke.weight} </p>
               </div>
             </Link>
         </article>
