@@ -46,13 +46,18 @@ class Home extends React.Component {
 
                 //unbind the scroll event to prevent continous request to server
                 $(window).unbind('scroll');
+                //TODO: 1. add selectedFilter::TUPLE to this.state 
+                //      2. use selectedFilter instead of this.state.filter
                 var filter__tuple = (this.state && "filter" in this.state) ? this.state.filter : undefined;
+
                 self.props.getPokemons(lastNumId, {amount: 5, filter: filter__tuple});
             }
         });          
     }
     _Filter(filterName, filterValue){
-        this.setState({filter: [filterName, filterValue]});
+        //TODO: 1. add selectedFilter::TUPLE to this.state 
+        //      2. update selectedFilter, when user change the value of state
+               
         this.props.getPokemons(0, {amount: DEFAULT_AMOUNT, filter: [filterName, filterValue]});
     }
     render() {
