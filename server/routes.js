@@ -5,6 +5,8 @@ var pokedex = require("./pokedex");
 var Types = getAllTypes(pokedex);
 
 router.get("/types", (req, res) => {
+	//Types contain strings --> ['Grass','Poison']
+	console.log(Types)
 	res.json(Types);
 })
 
@@ -15,18 +17,23 @@ router.get("/types", (req, res) => {
 router.get("/pokemons", (req, res, next) => {
 	const defaultAmount = req.query.amount || 5;
 	const lastId = req.query.lastId || 0;
-	var pokemon__array = pokedex.slice(Number(lastId), Number(defaultAmount)+Number(lastId) );
-	console.log(pokemon__array)
+	const filterName = req.query.filterName;
+	const filterValue = req.query.filterValue;
+	
+	var pokemon__array; //this will be the response
+	
+	//if no filter, just get all the pokemon by defaultAmount(5)
+	if(!filterName && !filterValue){
+		pokemon__array = pokedex.slice(Number(lastId), Number(defaultAmount)+Number(lastId) );
+	} else {
+		pokemon__array = pokedex.filter(p => p[filterName].indexOf(filterValue) >= 0 )
+		 							.slice(lastId, defaultAmount+lastId);
+	}
+
+
 	res.json(pokemon__array) 
 
 });
-
-
-router.get("/pokemons/filter", (req, res, next) => {
-	var pokemon__array = pokedex.filter(p => p.type.indexOf(filter_string) >= 0 )
-		 							.slice(lastId, defaultAmount + lastId);
-	res.json(pokemon__array)
-})
 
 
 /* GET /pokemon/:id
@@ -62,5 +69,5 @@ function getAllTypes(pokedex){
 		});
 
 	});
-	return Result
+	return Object.keys(Result)
 }

@@ -4,6 +4,8 @@ import homeAction from "./HomeAction"
 import { connect } from "react-redux";
 import $ from "jquery";
 
+var DEFAULT_AMOUNT = 10;
+
 //load pages
 import { Link } from "react-router";
 
@@ -19,12 +21,19 @@ import { Link } from "react-router";
 class Home extends React.Component {
     constructor(props) {
         super(props);
+        this.state = { filter: []}; 
+        /* schema for this.state.filter;
+          this.state.filter = [
+              {'Type': ['Grass', "Poison", etc]},
+              {"Weakness": ["Fire", "Poison", etc]}
+           ];
+         */
     }
     componentWillMount() {
         //if no pokemons, then grab it
-        if(this.props.pokemons.length <= 0){
-           this.props.getPokemons(0, {amount: 10});
-        }
+        (this.props.pokemons.length <= 0) ? this.props.getPokemons(0, {amount: DEFAULT_AMOUNT}) : "";
+        //if no filter, then grab it
+        this.props.getTypes(this)
     }
     componentDidUpdate(prevProps, prevState) {
         //attach scroll handler here, after the page has been populated
@@ -34,13 +43,18 @@ class Home extends React.Component {
             if ($(window).scrollTop() + $(window).height() >= mainHeight){
                 var pokemons = self.props.pokemons;
                 var lastNumId = pokemons[pokemons.length-1].id;
+
                 //unbind the scroll event to prevent continous request to server
                 $(window).unbind('scroll');
-                self.props.getPokemons(lastNumId, {amount: 5});
+                var filter__tuple = (this.state && "filter" in this.state) ? this.state.filter : undefined;
+                self.props.getPokemons(lastNumId, {amount: 5, filter: filter__tuple});
             }
         });          
     }
-
+    _Filter(filterName, filterValue){
+        this.setState({filter: [filterName, filterValue]});
+        this.props.getPokemons(0, {amount: DEFAULT_AMOUNT, filter: [filterName, filterValue]});
+    }
     render() {
     	const pokemons = this.props.pokemons;
     	if(!Array.isArray(pokemons)){
@@ -48,10 +62,20 @@ class Home extends React.Component {
     		return <div> Loading... </div>
     	}
     	const loopPokemon = pokemons.map((p, index) => <List key={p.id} pokemon={p}/> )
+        const loopFilter = this.state.filter.map((f,index) => {
+            var key = Object.keys(f)[0];
+            console.log("key", f)
+            return (<Filter 
+                        key={index} data={f[key]} name="type"
+                        onChange={this._Filter.bind(this)}
+                    />
+            )
+        })
         return (
         	<div  id="main">
                 <div className="container">
-        		  {loopPokemon}
+                  {loopFilter}
+                  {loopPokemon}
                 </div>
         	</div>
         );
@@ -65,8 +89,6 @@ const mapDispatchToProps = homeAction;
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Home);
 
 
-
-//
 
 
 const List = (props) => {
@@ -87,3 +109,22 @@ const List = (props) => {
     )
 }
 
+
+const Filter = (props)=>{
+    //if props.data not exists return null
+    if(!props.data || props.data.length <= 0) return null;
+    console.log("props.data", props.datas)
+    const loopFilter = props.data.map((filter, index) => <option key={filter} value={filter}>{filter}</option>)
+    return(
+        <div>
+            <label>{props.name}:</label>
+            <select name={props.name} 
+                    style={Object.assign({}, {marginLeft: 10}, props.style)}
+                    onChange={(e) => props.onChange(props.name, e.target.value)}
+                    >
+                <option value="none">none</option>
+                {loopFilter}
+            </select>
+        </div>
+    )
+}
