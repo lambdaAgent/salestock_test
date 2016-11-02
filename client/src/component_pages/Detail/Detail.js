@@ -13,7 +13,7 @@ class Detail extends React.Component {
 
 	componentDidMount() {
 	  var url = "http://localhost:8000";
-	  fetch(url + `/pokemon/${this.props.params.numId}`)
+	  fetch(url + `/pokemon/${this.props.params.id}`)
       .then(res => res.json())
       .then(res => {
       	  this.setState({pokemon: res})

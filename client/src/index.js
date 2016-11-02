@@ -18,7 +18,7 @@ ReactDOM.render(
 	<Provider store={store}>
 	   	<Router history={browserHistory} >
 	   		<Route path="/" component={Home} />
-	   		<Route path="/pokemon/:numId" component={Detail} />
+	   		<Route path="/pokemon/:id" component={Detail} />
 			<Route path="*" component={NoMatch}/>
 	  	</Router>
 	 </Provider>
