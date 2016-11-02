@@ -2,11 +2,16 @@
 var express = require('express');
 var router = express.Router();
 var pokedex = require("./pokedex");
+
+
+//Types::Array of String --> ['Grass','Poison']
+//Weaknesses::Array of String --> ['Fire', "Water"]
 var Types = getAllTypes(pokedex);
+var Weaknesses = getAllWeakness(pokedex);
 
 router.get("/filter", (req, res) => {
-	//Types contain strings --> ['Grass','Poison']
-	var result = {type:Types}
+	var result = [ {type:Types}, {weaknesses: Weaknesses}]
+
 	res.json(result);
 })
 
@@ -20,17 +25,17 @@ router.get("/pokemons", (req, res, next) => {
 	const filterName = req.query.filterName;
 	const filterValue = req.query.filterValue;
 	
-	var pokemon__array; //this will be the response
-	
+	var pokemon__array;
+
 	//if no filter, just get all the pokemon by defaultAmount(5)
 	if(!filterName && !filterValue){
 		pokemon__array = pokedex.slice(Number(lastId), Number(defaultAmount)+Number(lastId) );
 	} else {
 		pokemon__array = pokedex.filter(p => p[filterName].indexOf(filterValue) >= 0 )
-		 							.slice(lastId, defaultAmount+lastId);
+							    .slice(lastId, defaultAmount+lastId);
 	}
 
-
+	console.log(pokemon__array)
 	res.json(pokemon__array) 
 
 });
@@ -52,7 +57,7 @@ module.exports = router;
 
 
 // ===========
-//    LOGIC
+//    HELPER
 // ===========
 
 function getAllTypes(pokedex){
@@ -62,12 +67,28 @@ function getAllTypes(pokedex){
 			//if pokemon has no type, just return
 			return;
 		}
+
+		//loop each type and store in Result
+		// Result = {"Grass": true, "Poison": true};
 		poke.type.map(type => {
 			if(!(type in Result)){
 				Result[type] = true
 			}
 		});
 
+	});
+	return Object.keys(Result)
+}
+
+function getAllWeakness(pokedex){
+	var Result = {};
+	pokedex.map(poke => {
+		if(!"weaknesses" in poke) return;
+		poke.weaknesses.map(w => {
+			if(!(w in Result)){
+				Result[w] = true
+			}
+		})
 	});
 	return Object.keys(Result)
 }

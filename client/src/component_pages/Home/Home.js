@@ -33,10 +33,11 @@ class Home extends React.Component {
     componentWillMount() {
         //if no pokemons, then grab it
         (this.props.pokemons.length <= 0) ? this.props.getPokemons(0, {amount: DEFAULT_AMOUNT}) : "";
-        //if no filter, then grab it
+        //get Filter
         this.props.getFilter(this)
     }
     componentDidUpdate(prevProps, prevState) {
+        //this is for infinite list
         //attach scroll handler here, after the page has been populated
         var self = this;
         $(window).scroll(function(){
@@ -47,17 +48,18 @@ class Home extends React.Component {
 
                 //unbind the scroll event to prevent continous request to server
                 $(window).unbind('scroll');
-                //TODO: 1. add selectedFilter::TUPLE to this.state 
-                //      2. use selectedFilter instead of this.state.filter
-                var filter__tuple = (this.state && "filter" in this.state) ? this.state.filter : undefined;
-
+                var filter__tuple = (self.state) ? self.state.selectedFilter : undefined;
                 self.props.getPokemons(lastNumId, {amount: 5, filter: filter__tuple});
             }
         });          
     }
     _Filter(filterName, filterValue){
-        //TODO: 1. add selectedFilter::TUPLE to this.state 
-        //      2. update selectedFilter, when user change the value of state
+        if(filterValue === "none"){
+            //if none, get all pokemon from server 
+            return this.props.getPokemons(0, {amount: DEFAULT_AMOUNT});
+        }
+
+
         this.setState({selectedFilter: [filterName, filterValue]})     
         this.props.getPokemons(0, {amount: DEFAULT_AMOUNT, filter: [filterName, filterValue]});
     }
@@ -67,16 +69,15 @@ class Home extends React.Component {
     		//if no pokemons yet, show loading
     		return <div> Loading... </div>
     	}
-    	const loopPokemon = pokemons.map((p, index) => <List key={p.id} pokemon={p}/> )
-        const loopFilter = this.state.filter.map((f,index) => {
+    	const loopPokemon = pokemons.map((p, index) => <List key={p.id} pokemon={p}/> );
+        const loopFilter = (this.state.filter.length > 0) ? this.state.filter.map((f,index) => {
             var key = Object.keys(f)[0];
-            console.log("key", f)
             return (<Filter 
-                        key={index} data={f[key]} name="type"
+                        key={key} data={f[key]} name={key}
                         onChange={this._Filter.bind(this)}
                     />
             )
-        })
+        }) : "";
         return (
         	<div  id="main">
                 <div className="container">
@@ -94,7 +95,10 @@ const mapDispatchToProps = homeAction;
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Home);
 
-
+/* =================
+ * HELPER COMPONENTS
+ * =================
+ */
 
 
 const List = (props) => {
@@ -107,8 +111,14 @@ const List = (props) => {
               </div>
               <div className="media-body">
                 <h4 className="media-heading">{poke.name}</h4>
-                <p> height: {poke.height} </p>
-                <p> weight: {poke.weight} </p>
+                <div className="col-md-2">
+                <p> Weakness: </p>
+                {  poke.weaknesses.map(w => <p key={poke.name+w}><strong>{w}</strong></p>)  }
+                </div>
+                <div className="col-md-2">
+                <p>Type:</p>
+                {  poke.type.map(t => <p key={poke.name+t}><strong>{t}</strong></p>)  }
+                </div>
               </div>
             </Link>
         </article>
@@ -119,7 +129,6 @@ const List = (props) => {
 const Filter = (props)=>{
     //if props.data not exists return null
     if(!props.data || props.data.length <= 0) return null;
-    console.log("props.data", props.datas)
     const loopFilter = props.data.map((filter, index) => <option key={filter} value={filter}>{filter}</option>)
     return(
         <div>
