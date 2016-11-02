@@ -12,8 +12,8 @@ const Action = (dispatch) => ({
       .then(res => dispatch({type: "GET_POKEMON_FROM_SERVER", payload: res}) )
       .catch(err => console.log(err) )
     },
-    getTypes(React){
-    	fetch(url + '/types')
+    getFilter(React){
+    	fetch(url + '/filter')
     	.then(res => res.json())
     	.then(res => React.setState({filter: res}))
     	.catch(err => console.log(err))

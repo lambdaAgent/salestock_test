@@ -4,10 +4,10 @@ var router = express.Router();
 var pokedex = require("./pokedex");
 var Types = getAllTypes(pokedex);
 
-router.get("/types", (req, res) => {
+router.get("/filter", (req, res) => {
 	//Types contain strings --> ['Grass','Poison']
-	console.log(Types)
-	res.json(Types);
+	var result = {type:Types}
+	res.json(result);
 })
 
 /* this pokemon return certain amount(default=5) of pokemon, after the lastId

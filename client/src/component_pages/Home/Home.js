@@ -21,7 +21,8 @@ import { Link } from "react-router";
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { filter: []}; 
+                   //{filter::Array, selectedFilter::Tuple}
+        this.state = { filter: [], selectedFilter:[] }; 
         /* schema for this.state.filter;
           this.state.filter = [
               {'Type': ['Grass', "Poison", etc]},
@@ -33,7 +34,7 @@ class Home extends React.Component {
         //if no pokemons, then grab it
         (this.props.pokemons.length <= 0) ? this.props.getPokemons(0, {amount: DEFAULT_AMOUNT}) : "";
         //if no filter, then grab it
-        this.props.getTypes(this)
+        this.props.getFilter(this)
     }
     componentDidUpdate(prevProps, prevState) {
         //attach scroll handler here, after the page has been populated
@@ -57,7 +58,7 @@ class Home extends React.Component {
     _Filter(filterName, filterValue){
         //TODO: 1. add selectedFilter::TUPLE to this.state 
         //      2. update selectedFilter, when user change the value of state
-               
+        this.setState({selectedFilter: [filterName, filterValue]})     
         this.props.getPokemons(0, {amount: DEFAULT_AMOUNT, filter: [filterName, filterValue]});
     }
     render() {
