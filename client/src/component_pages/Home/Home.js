@@ -21,13 +21,14 @@ import { Link } from "react-router";
 class Home extends React.Component {
     constructor(props) {
         super(props);
-                   //{filter::Array, selectedFilter::Tuple}
-        this.state = { filter: [], selectedFilter:[] }; 
-        /* schema for this.state.filter;
+                   //{ filter::Array, selectedFilter::Tuple}
+        this.state = { filter: [],    selectedFilter:[] }; 
+        /* schema for this.state;
           this.state.filter = [
               {'Type': ['Grass', "Poison", etc]},
               {"Weakness": ["Fire", "Poison", etc]}
            ];
+           this.state.selectedFilter = (weaknesses, fire) or (type, Flying)
          */
     }
     componentWillMount() {
@@ -36,10 +37,11 @@ class Home extends React.Component {
         //get Filter
         this.props.getFilter(this)
     }
+
     componentDidUpdate(prevProps, prevState) {
-        //this is for infinite list
-        //attach scroll handler here, after the page has been populated
+        // infinite list
         var self = this;
+        // attach scroll handler, if user is scrolling to bottom page, it will run GET request
         $(window).scroll(function(){
             var mainHeight = $("#main").height() - 120; //the height of one list of pokemon is 120
             if ($(window).scrollTop() + $(window).height() >= mainHeight){
@@ -48,7 +50,13 @@ class Home extends React.Component {
 
                 //unbind the scroll event to prevent continous request to server
                 $(window).unbind('scroll');
+
+                // selectedFilter::Tuple = (filterName, filterType) 
+                // example selectedFilter = (weaknesses, fire) or (type, Flying)
+                // if user has not select any filter, selectedFilter will be undefined and GET will not filter pokemons
                 var filter__tuple = (self.state) ? self.state.selectedFilter : undefined;
+
+                // getPokemons will query to url --> ?filterName=selectedFilter[0]&filterValue=selectedFilter[1]
                 self.props.getPokemons(lastNumId, {amount: 5, filter: filter__tuple});
             }
         });          
@@ -60,7 +68,7 @@ class Home extends React.Component {
         }
 
 
-        this.setState({selectedFilter: [filterName, filterValue]})     
+        this.setState({selectedFilter: [filterName, filterValue]});  
         this.props.getPokemons(0, {amount: DEFAULT_AMOUNT, filter: [filterName, filterValue]});
     }
     render() {
@@ -94,6 +102,8 @@ const mapStateToProps =  ({home}) => home;
 const mapDispatchToProps = homeAction;
 
 module.exports = connect(mapStateToProps, mapDispatchToProps)(Home);
+
+
 
 /* =================
  * HELPER COMPONENTS

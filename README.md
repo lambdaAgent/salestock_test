@@ -8,9 +8,12 @@ I have decided to use this [database](https://github.com/Biuni/PokemonGO-Pokedex
    * `$ cd server`
    * `$ npm install`
    * `$ node server.js`
+
 3. Run client:
+   The built tool is [create-react-app](https://facebook.github.io/react/blog/2016/07/22/create-apps-with-no-configuration.html) by facebook.
    * `$ cd client`
-   * `$ npm start`
+   * `$ npm install` # It will take time to install)
+   * `$ npm start` # It's slow to load, but able to do hot-reload, effortlessly :)  
 
 
 
