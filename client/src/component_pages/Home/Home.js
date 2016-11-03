@@ -41,7 +41,6 @@ class Home extends React.Component {
         $(window).unbind('scroll');
     }
     componentDidUpdate(prevProps, prevState) {
-        console.log("did update", this.props.pokemons.length)
          // infinite list
         var self = this;
         // attach scroll handler, if user is scrolling to bottom page, it will run GET request

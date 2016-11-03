@@ -12,7 +12,7 @@ var Weaknesses = getAllWeakness(pokedex);
 router.get("/filter", (req, res) => {
 	var result = [ {type:Types}, {weaknesses: Weaknesses}]
 
-	setTimeout(()=>{res.json(result)},2000)
+	res.json(result)}
 })
 
 /* this pokemon return certain amount(default=5) of pokemon, after the lastId
@@ -35,7 +35,6 @@ router.get("/pokemons", (req, res, next) => {
 							    .slice(lastId, defaultAmount+lastId);
 	}
 
-	console.log(pokemon__array)
 	res.json(pokemon__array) 
 
 });
