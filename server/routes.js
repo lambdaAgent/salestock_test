@@ -9,10 +9,15 @@ var pokedex = require("./pokedex");
 var Types = getAllTypes(pokedex);
 var Weaknesses = getAllWeakness(pokedex);
 
+/* RENDER home page. */
+router.get('/', function(req, res, next) {
+  res.render('index');
+});
+
 router.get("/filter", (req, res) => {
 	var result = [ {type:Types}, {weaknesses: Weaknesses}]
 
-	res.json(result)}
+	res.json(result);
 })
 
 /* this pokemon return certain amount(default=5) of pokemon, after the lastId

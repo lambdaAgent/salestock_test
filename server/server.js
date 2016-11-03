@@ -5,11 +5,13 @@ var routes = require('./routes.js');
 
 var app = express();
 var port = process.env.port || 8000;
-// view engine setup
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// view engine setup
+app.set('views', path.join(__dirname, '../client/build'));
+app.set('view engine', 'hbs');
+
 app.use(logger('dev'));
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
