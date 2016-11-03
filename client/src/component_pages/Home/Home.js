@@ -37,9 +37,12 @@ class Home extends React.Component {
         //get Filter
         this.props.getFilter(this)
     }
-
+    componentWillUpdate(nextProps, nextState) {
+        $(window).unbind('scroll');
+    }
     componentDidUpdate(prevProps, prevState) {
-        // infinite list
+        console.log("did update", this.props.pokemons.length)
+         // infinite list
         var self = this;
         // attach scroll handler, if user is scrolling to bottom page, it will run GET request
         $(window).scroll(function(){
@@ -49,17 +52,16 @@ class Home extends React.Component {
                 var lastNumId = pokemons[pokemons.length-1].id;
 
                 //unbind the scroll event to prevent continous request to server
-                $(window).unbind('scroll');
 
                 // selectedFilter::Tuple = (filterName, filterType) 
                 // example selectedFilter = (weaknesses, fire) or (type, Flying)
                 // if user has not select any filter, selectedFilter will be undefined and GET will not filter pokemons
                 var filter__tuple = (self.state) ? self.state.selectedFilter : undefined;
-
+                
                 // getPokemons will query to url --> ?filterName=selectedFilter[0]&filterValue=selectedFilter[1]
-                self.props.getPokemons(lastNumId, {amount: 5, filter: filter__tuple});
+                self.props.getPokemons(lastNumId, {amount: 5, filter: filter__tuple})
             }
-        });          
+        })
     }
     _Filter(filterName, filterValue){
         if(filterValue === "none"){
